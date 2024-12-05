@@ -30,19 +30,35 @@ pages_list.forEach(pages => {
                 const later_pindex = page_map.get(later_page)
                 if (!isNaN(later_pindex) && later_pindex < pindex) {
                     ordered = false
-                    incorrect_pages_list.push(pages_array)
                     found_exception = true;
                 }
             }
         }
-
     }
     if (ordered) {
         p1_total += pages_array[(pages_array.length-1) / 2]
+    } else {
+        incorrect_pages_list.push(pages_array)
     }
 })
 console.log(p1_total);
 
-console.log(incorrect_pages_list)
+const sort_pages = (a,b) => {
+    const a_later_pages = rules_map.get(a)
+    const b_later_pages = rules_map.get(b)
+    if (a_later_pages?.includes(b)) {
+        return -1;
+    } else if (b_later_pages?.includes(a)) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 let p2_total = 0;
+incorrect_pages_list.forEach(pages => {
+    const correct_order = pages.sort(sort_pages);
+    p2_total += correct_order[(correct_order.length-1) / 2]
+
+})
 console.log(p2_total);
